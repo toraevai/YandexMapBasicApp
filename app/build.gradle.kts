@@ -70,4 +70,5 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-test-manifest")
     implementation ("com.yandex.android:maps.mobile:4.4.0-lite")
     implementation("com.google.android.gms:play-services-ads:22.6.0")
+    implementation("androidx.compose.ui:ui-viewbinding:1.5.4")
 }
