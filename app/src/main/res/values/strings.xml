@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Yandex Map Basic App</string>
+    <string name="services_list">Services list</string>
+    <string name="choose_services">Выбрать сервисы</string>
 </resources>
