@@ -7,12 +7,20 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.example.yandexmapbasicapp.data.ServicesData
 import com.example.yandexmapbasicapp.model.Services
+import com.yandex.mapkit.geometry.Point
+import com.yandex.mapkit.map.CameraPosition
 
 class YandexMapsViewModel : ViewModel() {
     private val servicesData = ServicesData()
     var servicesToDisplay by mutableStateOf(listOf("a", "b", "c"))
+    var currentCameraPosition by mutableStateOf(CameraPosition(Point(55.7522, 37.6156), 12.0f, 0.0f, 0.0f))
+        private set
     fun takeServices(context: Context): Services {
         return servicesData.takeServices(context)
+    }
+
+    fun saveCameraPosition(position: CameraPosition) {
+        currentCameraPosition = position
     }
 
     fun checkServiceToBeDisplayed(service: String) {

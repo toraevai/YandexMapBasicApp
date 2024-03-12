@@ -1,5 +1,6 @@
 package com.example.yandexmapbasicapp.ui
 
+
 import android.view.LayoutInflater
 import android.widget.Toast
 import androidx.annotation.StringRes
@@ -71,7 +72,9 @@ fun YandexMapScreen(
             composable(route = YandexMapScreen.Start.name) {
                 YandexMap(
                     listOfPins = listOfPins,
-                    goToServicesListClick = { navController.navigate(YandexMapScreen.ServicesList.name) }
+                    goToServicesListClick = { navController.navigate(YandexMapScreen.ServicesList.name) },
+                    currentCameraPosition = viewModel.currentCameraPosition,
+                    saveCameraPosition = { viewModel.saveCameraPosition(it) }
                 )
             }
             composable(route = YandexMapScreen.ServicesList.name) {
@@ -85,7 +88,12 @@ fun YandexMapScreen(
 }
 
 @Composable
-fun YandexMap(listOfPins: List<Pin>, goToServicesListClick: () -> Unit) {
+fun YandexMap(
+    listOfPins: List<Pin>,
+    goToServicesListClick: () -> Unit,
+    currentCameraPosition: CameraPosition,
+    saveCameraPosition: (CameraPosition) -> Unit
+) {
     val context = LocalContext.current
     val placemarkTapListener = MapObjectTapListener { _, point ->
         Toast.makeText(
@@ -96,6 +104,7 @@ fun YandexMap(listOfPins: List<Pin>, goToServicesListClick: () -> Unit) {
         true
     }
     val imageProvider = ImageProvider.fromResource(context, R.drawable.placemark_icon)
+
     Column(modifier = Modifier.padding(8.dp)) {
         Text(
             text = stringResource(R.string.choose_services),
@@ -110,7 +119,7 @@ fun YandexMap(listOfPins: List<Pin>, goToServicesListClick: () -> Unit) {
                         .findViewById(R.id.mapview)
                 MapKitFactory.getInstance().onStart()
                 view.onStart()
-                view.map.move(CameraPosition(Point(55.7522, 37.6156), 12.0f, 0.0f, 0.0f))
+                view.map.move(currentCameraPosition)
                 view
             },
             update = { view ->
@@ -124,6 +133,7 @@ fun YandexMap(listOfPins: List<Pin>, goToServicesListClick: () -> Unit) {
             },
             onRelease = { view ->
                 val mapView: MapView = view.findViewById(R.id.mapview)
+                saveCameraPosition(view.map.cameraPosition)
                 mapView.onStop()
                 MapKitFactory.getInstance().onStop()
             }
@@ -134,7 +144,13 @@ fun YandexMap(listOfPins: List<Pin>, goToServicesListClick: () -> Unit) {
 @Preview
 @Composable
 fun YandexMapPreview() {
+    val cameraPosition = CameraPosition(Point(55.7522, 37.6156), 12.0f, 0.0f, 0.0f)
     YandexMapBasicAppTheme {
-        YandexMap(listOfPins = listOf(), goToServicesListClick = {})
+        YandexMap(
+            listOfPins = listOf(),
+            goToServicesListClick = {},
+            currentCameraPosition = cameraPosition,
+            saveCameraPosition = {}
+        )
     }
 }
